@@ -1,0 +1,10 @@
+///************************* OUTS HOMEWORK ****************************************
+#ifndef ARCHITECTUREANDDESIGNPATTERNS_HW10_MICROSERVICEARCHITECTURE_HPP
+#define ARCHITECTUREANDDESIGNPATTERNS_HW10_MICROSERVICEARCHITECTURE_HPP
+
+class ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture
+{
+public:
+};
+
+#endif //#ifndef ARCHITECTUREANDDESIGNPATTERNS_HW10_MICROSERVICEARCHITECTURE_HPP
