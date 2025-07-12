@@ -22,8 +22,26 @@ add_executable(
 
   source/ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture.hpp
   source/ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture.cpp
+  source/cUser.hpp
+  source/cUser.cpp
+  source/cSpaceBattle.hpp
+  source/cSpaceBattle.cpp
+  source/cListOfSpaceBattleParticipantas.hpp
+  source/cListOfSpaceBattleParticipantas.cpp
+  source/cAuthServer.hpp
+  source/cAuthServer.cpp
+  source/cGameServer.hpp
+  source/cGameServer.cpp
+  source/¸GameParticipationRequest.hpp
+  source/¸GameParticipationRequest.cpp
 #add source file here
   source/tests/test_ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture.cpp
+  source/tests/test_cUser.cpp
+  source/tests/test_cSpaceBattle.cpp
+  source/tests/test_cListOfSpaceBattleParticipantas.cpp
+  source/tests/test_cAuthServer.cpp
+  source/tests/test_cGameServer.cpp
+  source/tests/test_¸GameParticipationRequest.cpp
 #add test file here
 )
 
