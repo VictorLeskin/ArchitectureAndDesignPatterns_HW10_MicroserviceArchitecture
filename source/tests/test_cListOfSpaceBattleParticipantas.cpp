@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "cListOfSpaceBattleParticipantas.hpp"
+#include "cUser.hpp"
 
 // gTest grouping class
 class test_cListOfSpaceBattleParticipantas : public ::testing::Test
@@ -20,6 +21,7 @@ public:
  
 TEST_F(test_cListOfSpaceBattleParticipantas, test_ctor )
 {
-  Test_cListOfSpaceBattleParticipantas t;
+  cUser u("a");
+  Test_cListOfSpaceBattleParticipantas t = { u };
 }
 

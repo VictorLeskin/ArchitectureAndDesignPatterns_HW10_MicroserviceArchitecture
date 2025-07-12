@@ -2,24 +2,24 @@
 
 #include <gtest/gtest.h>
 
-#include "cUser.hpp"
+#include "cGameId.hpp"
 
 // gTest grouping class
-class test_cUser : public ::testing::Test
+class test_cGameId : public ::testing::Test
 {
 public:
   // additional class to access to member of tested class
-  class Test_cUser : public cUser
+  class Test_cGameId : public cGameId
   {
   public:
     // add here members for free access.
-    using cUser::cUser; // delegate constructors
+    using cGameId::cGameId; // delegate constructors
   };
 
 };
  
-TEST_F(test_cUser, test_ctor )
+TEST_F(test_cGameId, test_ctor )
 {
-  Test_cUser t("");
+  Test_cGameId t;
 }
 

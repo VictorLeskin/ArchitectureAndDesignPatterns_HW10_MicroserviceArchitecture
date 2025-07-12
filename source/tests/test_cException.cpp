@@ -2,24 +2,24 @@
 
 #include <gtest/gtest.h>
 
-#include "cUser.hpp"
+#include "cException.hpp"
 
 // gTest grouping class
-class test_cUser : public ::testing::Test
+class test_cException : public ::testing::Test
 {
 public:
   // additional class to access to member of tested class
-  class Test_cUser : public cUser
+  class Test_cException : public cException
   {
   public:
     // add here members for free access.
-    using cUser::cUser; // delegate constructors
+    using cException::cException; // delegate constructors
   };
 
 };
  
-TEST_F(test_cUser, test_ctor )
+TEST_F(test_cException, test_ctor )
 {
-  Test_cUser t("");
+  Test_cException t("");
 }
 

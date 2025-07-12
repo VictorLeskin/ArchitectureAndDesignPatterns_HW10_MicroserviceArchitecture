@@ -1,0 +1,21 @@
+///************************* OUTS HOMEWORK ****************************************
+
+#include "cMessage.hpp"
+#include "cException.hpp"
+
+template<> cMessage cMessage::Create<cRequestSpaceBattleOrganisation>(const cRequestSpaceBattleOrganisation& operation)
+{
+	cMessage m;
+	throw cException("not implemented");
+	return m;
+}
+
+template<> cMessage cMessage::Create<cRequestAccessToGame>(const cRequestAccessToGame& operation)
+{
+	cMessage m;
+	throw cException("not implemented");
+	return m;
+}
+
+
+

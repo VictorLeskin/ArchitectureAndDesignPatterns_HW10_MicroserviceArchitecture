@@ -1,4 +1,4 @@
 ///************************* OUTS HOMEWORK ****************************************
 
-#include "¸GameParticipationRequest.hpp"
+#include "cRequestSpaceBattleOrganisation.hpp"
 

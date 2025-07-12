@@ -3,6 +3,18 @@
 #include <gtest/gtest.h>
 
 #include "ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture.hpp"
+#include "cAuthServer.hpp"
+#include "cGameId.hpp"
+#include "cGameParticipationRequest.hpp"
+#include "cGameServer.hpp"
+#include "cListOfSpaceBattleParticipantas.hpp"
+#include "cMessage.hpp"
+#include "cSpaceBattle.hpp"
+#include "cUser.hpp"
+#include "cRequestSpaceBattleOrganisation.hpp"
+#include "cRequestAccessToGame.hpp"
+#include "cException.hpp"
+
 
 // gTest grouping class
 class test_ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture : public ::testing::Test
@@ -14,12 +26,63 @@ public:
   public:
     // add here members for free access.
     using ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture::ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture; // delegate constructors
+
+    cGameId getGameId() 
+    {
+        throw cException("not implemented");
+        return cGameId("");
+    }
+    void getConfirmedAccessToGame(cUser&)
+    {
+        throw cException("not implemented");
+    }
   };
 
 };
  
 TEST_F(test_ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture, test_ctor )
 {
-  Test_ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture t;
+  //Test_ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture t;
 }
 
+TEST_F(test_ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture, test_HWScenario)
+{   
+    Test_ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture t;
+
+    cGameServer gameServer;
+    cAuthServer authServer;
+
+    cUser organizer("Organizer");
+    cUser participant1("Participant #1");
+    cUser participant2("Participant #2");
+
+    cListOfSpaceBattleParticipantas participantsList = {organizer, participant1, participant2};
+
+    cRequestSpaceBattleOrganisation req;
+
+    cMessage msg = cMessage::Create<cRequestSpaceBattleOrganisation>(req);
+
+    gameServer.push_back( msg );
+
+    cGameId gameId = t.getGameId();
+
+    cRequestAccessToGame reqAccessToGameOrganizer(organizer, gameId);
+    cRequestAccessToGame reqAccessToGameParticipant1(participant1, gameId);
+    cRequestAccessToGame reqAccessToGameParticipant2(participant2, gameId);
+
+    cMessage msg0 = cMessage::Create<cRequestAccessToGame>(reqAccessToGameOrganizer);
+    cMessage msg1 = cMessage::Create<cRequestAccessToGame>(reqAccessToGameParticipant1);
+    cMessage msg2 = cMessage::Create<cRequestAccessToGame>(reqAccessToGameParticipant2);
+
+    gameServer.push_back(msg0);
+    gameServer.push_back(msg1);
+    gameServer.push_back(msg2);
+
+
+    t.getConfirmedAccessToGame(organizer);
+    t.getConfirmedAccessToGame(participant1);
+    t.getConfirmedAccessToGame(participant2);
+
+
+
+}

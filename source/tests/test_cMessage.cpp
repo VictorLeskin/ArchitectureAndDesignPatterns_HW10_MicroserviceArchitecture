@@ -2,24 +2,19 @@
 
 #include <gtest/gtest.h>
 
-#include "cUser.hpp"
+#include "cMessage.hpp"
 
 // gTest grouping class
-class test_cUser : public ::testing::Test
+class test_cMessage : public ::testing::Test
 {
 public:
   // additional class to access to member of tested class
-  class Test_cUser : public cUser
+  class Test_cMessage : public cMessage
   {
   public:
     // add here members for free access.
-    using cUser::cUser; // delegate constructors
+    Test_cMessage(const cMessage& m) : cMessage(m) {}
+    using cMessage::cMessage; // delegate constructors
   };
-
 };
- 
-TEST_F(test_cUser, test_ctor )
-{
-  Test_cUser t("");
-}
 
