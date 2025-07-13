@@ -20,6 +20,6 @@ public:
  
 TEST_F(test_cRequestSpaceBattleOrganisation, test_ctor )
 {
-  Test_cRequestSpaceBattleOrganisation t;
+  Test_cRequestSpaceBattleOrganisation t(cUser(""));
 }
 

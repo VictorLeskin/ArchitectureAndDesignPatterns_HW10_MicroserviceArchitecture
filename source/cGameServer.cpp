@@ -2,8 +2,19 @@
 
 #include "cGameServer.hpp"
 #include "cException.hpp"
+#include "cRequestSpaceBattleOrganisation.hpp"
 
-void cGameServer::push_back(const cMessage& msg)
+cGameId cGameServer::getGameId()
 {
-	throw cException("not implemented");
+	cMessage item;
+	if (false == pop_front(item))
+		throw(cException("There is not request for gameId "));
+
+	cRequestSpaceBattleOrganisation r(cUser(""));
+
+	cMessage::FromMessage(item, r);
+
+	throw(cException("not implemented"));
+
+	return cGameId("gameId #1");
 }
