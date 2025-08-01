@@ -66,12 +66,16 @@ add_executable(
 target_include_directories(
    MicroserviceArchitecture PRIVATE 
    source
+   ../jwt-cpp/include
+   ./installed/x64-windows-static/include
 )
 
 target_link_libraries(
   MicroserviceArchitecture
   GTest::gtest_main
   GTest::gmock_main
+  ./installed/x64-windows-static/lib/libcrypto
+  ./installed/x64-windows-static/lib/libssl
 )
 
 include(GoogleTest GoogleMock)
