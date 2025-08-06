@@ -5,6 +5,38 @@ project(ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Подключаем необходимые зависимости
+# Указываем путь к OpenSSL
+set(OPENSSL_ROOT_DIR "D:/work/OpenSSL-Win64")
+set(OPENSSL_USE_STATIC_LIBS TRUE)
+
+# Поиск OpenSSL
+find_package(OpenSSL REQUIRED)
+if(OPENSSL_FOUND)
+    message(STATUS "OpenSSL found: ${OPENSSL_INCLUDE_DIR}")
+    include_directories(${OPENSSL_INCLUDE_DIR})
+else()
+    message(FATAL_ERROR "OpenSSL not found")
+endif()
+
+# Загрузка jwt-cpp
+include(FetchContent)
+FetchContent_Declare(
+    jwt-cpp
+    GIT_REPOSITORY https://github.com/Thalhammer/jwt-cpp.git
+    GIT_TAG        v0.7.0
+)
+FetchContent_MakeAvailable(jwt-cpp)
+
+# Загрузка nlohmann_json
+include(FetchContent)
+FetchContent_Declare(
+    nlohmann_json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG        v3.11.2
+)
+FetchContent_MakeAvailable(nlohmann_json)
+
 include(FetchContent)
 FetchContent_Declare(
   googletest
@@ -66,16 +98,19 @@ add_executable(
 target_include_directories(
    MicroserviceArchitecture PRIVATE 
    source
-   ../jwt-cpp/include
-   ./installed/x64-windows-static/include
 )
 
 target_link_libraries(
   MicroserviceArchitecture
   GTest::gtest_main
   GTest::gmock_main
-  ./installed/x64-windows-static/lib/libcrypto
-  ./installed/x64-windows-static/lib/libssl
+  jwt-cpp::jwt-cpp
+  nlohmann_json::nlohmann_json
+  #OpenSSL::SSL
+  #OpenSSL::Crypto
+  ${OPENSSL_SSL_LIBRARY}
+  ${OPENSSL_CRYPTO_LIBRARY}
+  crypt32 # Необходимо для линковки на Windows
 )
 
 include(GoogleTest GoogleMock)

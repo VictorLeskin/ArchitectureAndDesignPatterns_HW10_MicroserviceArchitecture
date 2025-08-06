@@ -48,7 +48,7 @@ TEST_F(test_ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture, test_HW
         Test_ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture t;
 
         cGameServer gameServer;
-        cAuthServer authServer;
+        cAuthServer authServer("simple_secret_key", 3600);
 
         cUser organizer("Organizer");
         cUser participant1("Participant #1");
@@ -85,46 +85,4 @@ TEST_F(test_ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture, test_HW
     {
         FAIL() << "Exception catched";
     }
-}
-
-#include "jwt-cpp/jwt.h"
-
-#pragma comment(lib, "crypt32")
-#pragma comment(lib, "ws2_32.lib")
-
-TEST_F(test_ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture, test_CreateJWT)
-{
-  // Чтение ключей
-  std::string rsa_pub_key = "-----BEGIN PUBLIC KEY-----...";
-  std::string rsa_priv_key = "-----BEGIN PRIVATE KEY-----...";
-
-  // Создание токена
-  auto token = jwt::create()
-  .set_issuer("auth0")
-  .sign(jwt::algorithm::rs256(rsa_pub_key, rsa_priv_key));
-
-  try {
-    auto decoded = jwt::decode(token);
-    auto verifier = jwt::verify()
-      .allow_algorithm(jwt::algorithm::rs256(rsa_pub_key))
-      .with_issuer("auth0");
-
-    verifier.verify(decoded);
-    std::cout << "Token is valid" << std::endl;
-
-    // Получение данных из payload
-    if (decoded.has_payload_claim("user")) {
-      std::cout << "User: "
-        << decoded.get_payload_claim("user").as_string()
-        << std::endl;
-    }
-  }
-  catch (const std::exception& e) {
-    std::cerr << "Verification failed: " << e.what() << std::endl;
-  }
-  catch (...) {
-    std::cerr << "Unknown error" << std::endl;
-  }
-
-
 }
