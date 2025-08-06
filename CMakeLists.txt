@@ -110,7 +110,6 @@ target_link_libraries(
   #OpenSSL::Crypto
   ${OPENSSL_SSL_LIBRARY}
   ${OPENSSL_CRYPTO_LIBRARY}
-  crypt32 # Необходимо для линковки на Windows
 )
 
 include(GoogleTest GoogleMock)
