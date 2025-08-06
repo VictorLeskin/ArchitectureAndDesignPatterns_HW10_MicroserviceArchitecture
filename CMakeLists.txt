@@ -78,6 +78,8 @@ add_executable(
   source/cException.cpp
   source/cMessagesDeque.hpp
   source/cMessagesDeque.cpp
+  source/cGameOperation.hpp
+  source/cGameOperation.cpp
 #add source file here
   source/tests/test_ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture.cpp
   source/tests/test_cUser.cpp
@@ -92,6 +94,7 @@ add_executable(
   source/tests/test_cRequestAccessToGame.cpp
   source/tests/test_cException.cpp
   source/tests/test_cMessagesDeque.cpp
+  source/tests/test_cGameOperation.cpp
 #add test file here
 )
 

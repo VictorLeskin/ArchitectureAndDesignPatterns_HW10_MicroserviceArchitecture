@@ -8,6 +8,8 @@
 #include <chrono>
 #include <jwt-cpp/jwt.h>
 #include <nlohmann/json.hpp>
+#include <cListOfSpaceBattleParticipantas.hpp>
+#include <cRequestAccessToGame.hpp>
 
 struct GameInfo {
   std::string game_id;
@@ -25,11 +27,19 @@ public:
   cAuthServer(const std::string& secret, int token_expiry)
     : secret_key(secret), token_expiry_seconds(token_expiry) {}
 
+  std::string createGame(const cListOfSpaceBattleParticipantas& participantsList);
+  bool checkPlayer(const std::string& gameId, const std::string& playerName);
+
+  std::string issueToken(const cRequestAccessToGame& req);
+  
+
   std::string createGame(const std::vector<std::string>& players);
   std::string issueToken(const std::string& user_id, const std::string& game_id);
   bool validateToken(const std::string& token, const std::string& game_id);
 
 private:
+  int counter = 0;
+
   std::string secret_key;
   int token_expiry_seconds;
   std::map<std::string, std::vector<std::string>> games;

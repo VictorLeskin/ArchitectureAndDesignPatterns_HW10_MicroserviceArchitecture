@@ -20,6 +20,6 @@ public:
  
 TEST_F(test_cRequestSpaceBattleOrganisation, test_ctor )
 {
-  Test_cRequestSpaceBattleOrganisation t(cUser(""));
+  Test_cRequestSpaceBattleOrganisation t(cUser(""),cGameId(""));
 }
 

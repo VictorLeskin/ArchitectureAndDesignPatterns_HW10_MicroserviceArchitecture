@@ -8,10 +8,11 @@ class cUser
 {
 public:
 	cUser(const std::string& name) : name(name) {}
+	cUser() : name() {}
 
 	const std::string& Name() const { return name; }
 
-protected:
+public:
 	std::string name;
 };
 

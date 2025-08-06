@@ -5,10 +5,24 @@
 #include <random>
 #include <algorithm>
 
+std::string cAuthServer::createGame(const cListOfSpaceBattleParticipantas& participantsList)
+{
+  std::vector<std::string> players;
+  return createGame(participantsList.Players());
+}
+
 std::string cAuthServer::createGame(const std::vector<std::string>& players) {
   std::string id = generateSimpleId();
   games[id] = players;
   return id;
+}
+
+bool cAuthServer::checkPlayer(const std::string& gameId, const std::string& playerName)
+{
+  if (games.find(gameId) == games.end())
+    return false;
+  const std::vector<std::string>& players = games[gameId];
+  return std::find(  players.begin(), players.end(), playerName) != players.end();
 }
 
 std::string cAuthServer::issueToken(const std::string& user_id, const std::string& game_id) {
@@ -27,6 +41,11 @@ std::string cAuthServer::issueToken(const std::string& user_id, const std::strin
     .sign(jwt::algorithm::hs256{ secret_key });
 }
 
+std::string cAuthServer::issueToken(const cRequestAccessToGame& req)
+{
+  return issueToken(req.user.Name(), req.gameId.id);
+}
+
 bool cAuthServer::validateToken(const std::string& token, const std::string& game_id) {
   try {
     auto decoded = jwt::decode(token);
@@ -42,6 +61,5 @@ bool cAuthServer::validateToken(const std::string& token, const std::string& gam
 }
 
 std::string cAuthServer::generateSimpleId() {
-  static int counter = 0;
   return "game_" + std::to_string(++counter);
 }

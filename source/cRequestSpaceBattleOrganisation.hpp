@@ -8,12 +8,11 @@
 class cRequestSpaceBattleOrganisation : public cMsgHeader
 {
 public:
-	cRequestSpaceBattleOrganisation(cUser user) : cMsgHeader( "", "", "registerNewGame" ), user(user)
-	{
-	}
+	cRequestSpaceBattleOrganisation(const cUser& user, const cGameId& gameId);
 	const cUser& User() const { return user; }
 protected:
 	cUser user;
+	cGameId gameId;
 };
 
 #endif //#ifndef CREQUESTSPACEBATTLEORGANISATION_HPP

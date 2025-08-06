@@ -47,8 +47,8 @@ TEST_F(test_ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture, test_HW
     {
         Test_ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture t;
 
-        cGameServer gameServer;
         cAuthServer authServer("simple_secret_key", 3600);
+        cGameServer gameServer(&authServer);
 
         cUser organizer("Organizer");
         cUser participant1("Participant #1");
@@ -56,30 +56,71 @@ TEST_F(test_ArchitectureAndDesignPatterns_HW10_MicroserviceArchitecture, test_HW
 
         cListOfSpaceBattleParticipantas participantsList = { organizer, participant1, participant2 };
 
-        cRequestSpaceBattleOrganisation req(organizer);
-
-        cMessage msg = cMessage::ToMessage<cRequestSpaceBattleOrganisation>(req);
-
-        gameServer.push_back(msg);
-
-        cGameId gameId = gameServer.getGameId();
+        cGameId gameId = gameServer.createGame(participantsList);
 
         cRequestAccessToGame reqAccessToGameOrganizer(organizer, gameId);
         cRequestAccessToGame reqAccessToGameParticipant1(participant1, gameId);
         cRequestAccessToGame reqAccessToGameParticipant2(participant2, gameId);
 
-        cMessage msg0 = cMessage::ToMessage<cRequestAccessToGame>(reqAccessToGameOrganizer);
-        cMessage msg1 = cMessage::ToMessage<cRequestAccessToGame>(reqAccessToGameParticipant1);
-        cMessage msg2 = cMessage::ToMessage<cRequestAccessToGame>(reqAccessToGameParticipant2);
+        std::string tokenOrganizer = authServer.issueToken(reqAccessToGameOrganizer);
+        std::string tokenParticipant1 = authServer.issueToken(reqAccessToGameParticipant1);
+        std::string tokenParticipant2 = authServer.issueToken(reqAccessToGameParticipant2);
+        
+        std::string s0("let's make pause");
+        TGameOperation<std::string> goOrganizerMakePause;
+        goOrganizerMakePause.userId = organizer;
+        goOrganizerMakePause.token = tokenOrganizer;
+        goOrganizerMakePause.gameId = gameId;
+        goOrganizerMakePause.objId = cOjectId("");
+        goOrganizerMakePause.operationId = cOperationId("test");
+        goOrganizerMakePause.operationParameters = s0;
 
-        gameServer.push_back(msg0);
-        gameServer.push_back(msg1);
-        gameServer.push_back(msg2);
+        std::string s1("I am agree");
+        TGameOperation<std::string> goOrganizerParticipant1;
+        goOrganizerParticipant1.userId = participant1;
+        goOrganizerParticipant1.token = tokenParticipant1;
+        goOrganizerParticipant1.gameId = gameId;
+        goOrganizerParticipant1.objId = cOjectId("");
+        goOrganizerParticipant1.operationId = cOperationId("test");
+        goOrganizerParticipant1.operationParameters = s1;
 
+        cMessage msg0 = cMessage::ToMessage< TGameOperation<std::string> >(goOrganizerMakePause);
+        cMessage msg1 = cMessage::ToMessage< TGameOperation<std::string> >(goOrganizerParticipant1);
 
-        t.getConfirmedAccessToGame(organizer);
-        t.getConfirmedAccessToGame(participant1);
-        t.getConfirmedAccessToGame(participant2);
+        EXPECT_TRUE( gameServer.consume(msg0) );
+        EXPECT_TRUE( gameServer.consume(msg1) );
+
+        //wrong user 
+        cUser hacker("Hacker");
+
+        std::string h0("I am agree");
+        TGameOperation<std::string> goHakerJustToWatch;
+        goHakerJustToWatch.userId = hacker;
+        goHakerJustToWatch.token = tokenOrganizer;
+        goHakerJustToWatch.gameId = gameId;
+        goHakerJustToWatch.objId = cOjectId("");
+        goHakerJustToWatch.operationId = cOperationId("test");
+        goHakerJustToWatch.operationParameters = h0;
+        cMessage msgH = cMessage::ToMessage< TGameOperation<std::string> >(goHakerJustToWatch);
+
+        EXPECT_FALSE(gameServer.consume(msgH));
+        
+        // wrong token
+
+        std::string wrongTokenOrganizer = tokenOrganizer;
+        wrongTokenOrganizer[0] = 'X';
+
+        TGameOperation<std::string> goOrganizerWithWrongToken;
+        goOrganizerWithWrongToken.userId = organizer;
+        goOrganizerWithWrongToken.token = wrongTokenOrganizer;
+        goOrganizerWithWrongToken.gameId = gameId;
+        goOrganizerWithWrongToken.objId = cOjectId("");
+        goOrganizerWithWrongToken.operationId = cOperationId("test");
+        goOrganizerWithWrongToken.operationParameters = s0;
+
+        cMessage msgW = cMessage::ToMessage<TGameOperation<std::string>>(goOrganizerWithWrongToken);
+        EXPECT_FALSE(gameServer.consume(msgW));
+
     }
     catch (std::exception& e)
     {

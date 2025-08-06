@@ -3,18 +3,23 @@
 #include "cGameServer.hpp"
 #include "cException.hpp"
 #include "cRequestSpaceBattleOrganisation.hpp"
+#include "cAuthServer.hpp"
 
-cGameId cGameServer::getGameId()
+cGameId cGameServer::createGame(const cListOfSpaceBattleParticipantas& participantsList)
 {
-	cMessage item;
-	if (false == pop_front(item))
-		throw(cException("There is not request for gameId "));
+	return auth_server->createGame(participantsList);
+}
 
-	cRequestSpaceBattleOrganisation r(cUser(""));
+bool cGameServer::consume(const cMessage&msg)
+{
+	TGameOperation<std::string> t;
 
-	cMessage::FromMessage(item, r);
+	if( false == cMessage::FromMessage(msg, t) )
+		return false;
 
-	throw(cException("not implemented"));
+	if (false == auth_server->checkPlayer(t.gameId.id, t.userId.name))
+		return false;
 
-	return cGameId("gameId #1");
+	bool ret = auth_server->validateToken(t.token, t.gameId.id);
+	return ret;
 }
